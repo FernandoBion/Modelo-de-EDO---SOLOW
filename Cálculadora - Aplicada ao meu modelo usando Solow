@@ -1,0 +1,47 @@
+# Parâmetros do modelo
+L = 100e6
+n = 0.01
+delta = 0.05
+s = 0.2
+alpha = 0.3
+A = 1
+g = 0.02
+K = 2e12
+Y = 3e12
+
+# Número de anos a serem simulados
+T = 1
+
+
+# Listas para armazenar os valores das variáveis ao longo do tempo
+K_values = [K]
+L_values = [L]
+A_values = [A]
+Y_values = [Y]
+
+# Loop sobre os anos
+for t in range(T):
+    # Calcular as taxas de variação das variáveis usando as EDOs do modelo de Solow
+    dK = s * Y - delta * K
+    dL = n * L
+    dA = g * A
+    dY = Y * (alpha * (dK / K) + (1 - alpha) * (dA / A))
+    
+    # Atualizar os valores das variáveis usando o método de Euler
+    K += dK
+    L += dL
+    A += dA
+    Y += dY
+    
+    # Armazenar os valores das variáveis ao longo do tempo
+    K_values.append(K)
+    L_values.append(L)
+    A_values.append(A)
+    Y_values.append(Y)
+
+# Imprimir os valores das variáveis no ano 30
+print(f'Ano {T}:')
+print(f'Estoque de capital: {K_values[-1]:.2f}')
+print(f'População ativa: {L_values[-1]:.2f}')
+print(f'Nível de tecnologia: {A_values[-1]:.2f}')
+print(f'Produto: {Y_values[-1]:.2f}')
