@@ -1,0 +1,62 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Definir parâmetros do modelo
+L = 100 # em milhões de pessoas
+n = 0.01
+delta = 0.05
+s = 0.2
+alpha = 0.3
+A = 1
+g = 0.02
+
+# Definir condições iniciais
+K0 = 2000 # em bilhões de reais
+Y0 = 3000 # em bilhões de reais
+L0 = 100 # em milhões de pessoas
+A0 = 1
+
+
+# Definir período de tempo
+T = 30 # em anos
+dt = 0.1
+t = np.arange(0, T, dt)
+
+# Definir funções das equações diferenciais
+def dK(K, Y):
+    return s * Y - delta * K
+
+def dL(L):
+    return n * L
+
+def dA(A):
+    return g * A
+
+def dY(K, L, A):
+    return A * (K/L)**alpha * L
+
+# Resolver as equações diferenciais numericamente
+K = np.zeros(len(t))
+Y = np.zeros(len(t))
+L = np.zeros(len(t))
+A = np.zeros(len(t))
+
+K[0] = K0
+Y[0] = Y0
+L[0] = L0
+A[0] = A0
+
+for i in range(1, len(t)):
+    K[i] = K[i-1] + dK(K[i-1], Y[i-1]) * dt
+    L[i] = L[i-1] + dL(L[i-1]) * dt
+    A[i] = A[i-1] + dA(A[i-1]) * dt
+    Y[i] = dY(K[i], L[i], A[i])
+
+# Plotar resultados
+plt.plot(t, K, label='Estoque de capital')
+plt.plot(t, L, label='População')
+plt.xlabel('Tempo (anos)')
+plt.ylabel('Bilhões de reais / milhões de pessoas')
+plt.title('Evolução do estoque de capital e da população')
+plt.legend()
+plt.show()
